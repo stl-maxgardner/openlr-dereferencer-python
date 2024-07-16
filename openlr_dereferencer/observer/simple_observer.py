@@ -8,6 +8,7 @@ from ..maps import Line
 
 class AttemptedRoute(NamedTuple):
     """An attempted route between two lrps"""
+
     from_lrp: LocationReferencePoint
     to_lrp: LocationReferencePoint
     from_line: Line
@@ -15,6 +16,7 @@ class AttemptedRoute(NamedTuple):
     success: bool
     path: Optional[Sequence[Line]]
     reason: Optional[str]
+
 
 class AttemptedMatch(NamedTuple):
     "An attempted try to resolve a pair of two LRPs"
@@ -42,24 +44,34 @@ class SimpleObserver(DecoderObserver):
             self.candidates[lrp].append(candidate)
 
     def on_candidate_rejected(self, lrp: LocationReferencePoint, candidate: Candidate, reason: str):
-        self.failed_candidates.append(
-            (lrp, candidate, reason)
-        )
+        self.failed_candidates.append((lrp, candidate, reason))
 
-    def on_route_fail(self, from_lrp: LocationReferencePoint, to_lrp: LocationReferencePoint,
-                      from_line: Line, to_line: Line, reason: str):
-        self.attempted_routes.append(
-            AttemptedRoute(from_lrp, to_lrp, from_line, to_line, False, None, reason)
-        )
+    def on_route_fail(
+        self,
+        from_lrp: LocationReferencePoint,
+        to_lrp: LocationReferencePoint,
+        from_line: Line,
+        to_line: Line,
+        reason: str,
+    ):
+        self.attempted_routes.append(AttemptedRoute(from_lrp, to_lrp, from_line, to_line, False, None, reason))
 
-    def on_route_success(self, from_lrp: LocationReferencePoint, to_lrp: LocationReferencePoint,
-                         from_line: Line, to_line: Line, path: Sequence[Line]):
-        self.attempted_routes.append(
-            AttemptedRoute(from_lrp, to_lrp, from_line, to_line, True, path, None)
-        )
+    def on_route_success(
+        self,
+        from_lrp: LocationReferencePoint,
+        to_lrp: LocationReferencePoint,
+        from_line: Line,
+        to_line: Line,
+        path: Sequence[Line],
+    ):
+        self.attempted_routes.append(AttemptedRoute(from_lrp, to_lrp, from_line, to_line, True, path, None))
 
-    def on_matching_fail(self, from_lrp: LocationReferencePoint, to_lrp: LocationReferencePoint,
-                         from_candidates: Sequence[Candidate], to_candidates: Sequence[Candidate], reason: str):
-        self.failed_matches.append(
-            AttemptedMatch(from_lrp, to_lrp, from_candidates, to_candidates, reason)
-        )
+    def on_matching_fail(
+        self,
+        from_lrp: LocationReferencePoint,
+        to_lrp: LocationReferencePoint,
+        from_candidates: Sequence[Candidate],
+        to_candidates: Sequence[Candidate],
+        reason: str,
+    ):
+        self.failed_matches.append(AttemptedMatch(from_lrp, to_lrp, from_candidates, to_candidates, reason))

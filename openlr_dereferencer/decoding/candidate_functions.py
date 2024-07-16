@@ -208,6 +208,7 @@ def match_tail(
     # Generate all pairs of candidates for the first two lrps
     next_lrp = tail[0]
     next_candidates = list(nominate_candidates(next_lrp, reader, config, observer, last_lrp))
+
     if last_lrp and len(next_candidates) == 0:
         raise LRLastLRPNoCandidatesError("Decoding was unsuccessful: no candidates found for last lrp.")
     pairs = list(product(candidates, next_candidates))
@@ -230,6 +231,7 @@ def match_tail(
 
     if observer is not None:
         observer.on_matching_fail(current, next_lrp, candidates, next_candidates, "No candidate pair matches")
+
     raise LRDecodeError("Decoding was unsuccessful: No candidates left or available.")
 
 
@@ -264,6 +266,7 @@ def handleCandidatePair(
         Else, this function returns the found route.
     """
     current, next_lrp = lrps
+
     source, dest = candidates
     route = get_candidate_route(source, dest, lowest_frc, maxlen, equal_area)
     if not route:
