@@ -113,9 +113,11 @@ def load_config(source: Union[str, TextIOBase, dict]) -> Config:
             opened_source["max_dnp_deviation"],
             opened_source["tolerated_dnp_dev"],
             opened_source["min_score"],
-            {FRC(int(key)): FRC(value) for (key, value) in opened_source["tolerated_lfrc"].items()},
+            {
+                FRC(int(key)): FRC(value)
+                for (key, value) in opened_source["tolerated_lfrc"].items()
+            },
             opened_source["candidate_threshold"],
-            opened_source["rel_candidate_threshold"],
             opened_source["max_bear_deviation"],
             opened_source["fow_weight"],
             opened_source["frc_weight"],
@@ -132,7 +134,9 @@ def load_config(source: Union[str, TextIOBase, dict]) -> Config:
 NoneType: object = type(None)
 
 
-def save_config(config: Config, dest: Union[str, TextIOBase, NoneType] = None) -> Optional[dict]:
+def save_config(
+    config: Config, dest: Union[str, TextIOBase, NoneType] = None
+) -> Optional[dict]:
     """Saves a config to a file or a dictionary
 
     Args:
