@@ -117,6 +117,7 @@ def load_config(source: Union[str, TextIOBase, dict]) -> Config:
                 FRC(int(key)): FRC(value)
                 for (key, value) in opened_source["tolerated_lfrc"].items()
             },
+            opened_source["frc_score_tolerance"],
             opened_source["candidate_threshold"],
             opened_source["max_bear_deviation"],
             opened_source["fow_weight"],
@@ -126,6 +127,7 @@ def load_config(source: Union[str, TextIOBase, dict]) -> Config:
             opened_source["fow_standin_score"],
             opened_source["bear_dist"],
             opened_source["equal_area"],
+            opened_source["equal_area_srid"],
             opened_source["timeout"],
         ]
     )
