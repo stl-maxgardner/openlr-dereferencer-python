@@ -6,6 +6,7 @@ from openlr import Coordinates
 from .primitives import Line, Node, ExampleMapError
 from openlr_dereferencer.maps import MapReader
 
+# TODO: FIX THIS JUNK!!!!
 try:
     from stl_general import database as db
 except ModuleNotFoundError:

@@ -30,7 +30,6 @@ setup(
         "openlr==1.0.1",
         "geographiclib",
         "shapely",
-        "stl_general @ git+ssh://git@github.com/StreetLight-Data/npp.git@develop#subdirectory=streetlight/stl_general",
     ],
     test_suite="tests",
     python_requires=">=3.6",
