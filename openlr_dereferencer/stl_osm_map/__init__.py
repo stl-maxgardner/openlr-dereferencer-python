@@ -6,12 +6,6 @@ from openlr import Coordinates
 from .primitives import Line, Node, ExampleMapError
 from openlr_dereferencer.maps import MapReader
 
-# TODO: FIX THIS JUNK!!!!
-try:
-    from stl_general import database as db
-except ModuleNotFoundError:
-    from repoman.utils import stl_database as db
-
 
 class PostgresMapReader(MapReader):
     """
@@ -21,8 +15,9 @@ class PostgresMapReader(MapReader):
     """
 
     def __init__(
-        self, db_nickname, db_schema, lines_tbl_name, nodes_tbl_name, srid=4326
+        self, ext_connect_db_method, db_nickname, db_schema, lines_tbl_name, nodes_tbl_name, srid=4326
     ):
+        self.connect_db = ext_connect_db_method
         self.db_nickname = db_nickname
         self.db_schema = db_schema
         self.lines_tbl_name = lines_tbl_name
@@ -32,7 +27,7 @@ class PostgresMapReader(MapReader):
 
     def __enter__(self):
         assert self.db_nickname is not None
-        self.connection = db.connect_db(
+        self.connection = self.connect_db(
             nickname=self.db_nickname, driver="psycopg2"
         )
         self.cursor = self.connection.cursor()
