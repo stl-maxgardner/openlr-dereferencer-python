@@ -15,7 +15,13 @@ class PostgresMapReader(MapReader):
     """
 
     def __init__(
-        self, ext_connect_db_method, db_nickname, db_schema, lines_tbl_name, nodes_tbl_name, srid=4326
+        self,
+        ext_connect_db_method,
+        db_nickname,
+        db_schema,
+        lines_tbl_name,
+        nodes_tbl_name,
+        srid=4326,
     ):
         self.connect_db = ext_connect_db_method
         self.db_nickname = db_nickname
