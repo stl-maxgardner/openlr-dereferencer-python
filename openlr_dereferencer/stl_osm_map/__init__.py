@@ -21,6 +21,7 @@ class PostgresMapReader(MapReader):
         db_schema,
         lines_tbl_name,
         nodes_tbl_name,
+        conn=None,
         srid=4326,
     ):
         self.connect_db = ext_connect_db_method
@@ -28,14 +29,15 @@ class PostgresMapReader(MapReader):
         self.db_schema = db_schema
         self.lines_tbl_name = lines_tbl_name
         self.nodes_tbl_name = nodes_tbl_name
-        self.connection = None
+        self.connection = conn
+        self.cursor = self.connection if self.connection else None
         self.srid = srid
 
     def __enter__(self):
-        assert self.db_nickname is not None
-        self.connection = self.connect_db(
-            nickname=self.db_nickname, driver="psycopg2"
-        )
+        if not self.connection:
+            self.connection = self.connect_db(
+                nickname=self.db_nickname, driver="psycopg2"
+            )
         self.cursor = self.connection.cursor()
         return self
 
