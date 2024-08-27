@@ -30,7 +30,7 @@ class PostgresMapReader(MapReader):
         self.lines_tbl_name = lines_tbl_name
         self.nodes_tbl_name = nodes_tbl_name
         self.connection = conn
-        self.cursor = self.connection if self.connection else None
+        self.cursor = self.connection.cursor() if self.connection else None
         self.srid = srid
 
     def __enter__(self):
