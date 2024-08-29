@@ -9,7 +9,7 @@ from openlr_dereferencer.maps import MapReader
 
 class PostgresMapReader(MapReader):
     """
-    This is a reader for the basemap table stored in postgres as two tables of lines and nodes`.
+    This is a reader for the basemap table stored in postgres as two tables: lines and nodes`.
     """
 
     def __init__(
@@ -24,13 +24,16 @@ class PostgresMapReader(MapReader):
         self.lines_tbl_name = lines_tbl_name
         self.nodes_tbl_name = nodes_tbl_name
         self.connection = conn
+        self.cursor = self.connection.cursor()
         self.srid = srid
 
     def __enter__(self):
-        self.cursor = self.connection.cursor() if self.connection else None
         return self
 
     def __exit__(self, *exc_info):
+        self.close()
+
+    def close(self):
         # make sure the cursor gets closed
         try:
             close_it = self.cursor.close
@@ -38,6 +41,7 @@ class PostgresMapReader(MapReader):
             pass
         else:
             close_it()
+        self.cursor = None
 
     def get_line(self, line_id: int) -> Line:
         # Just verify that this line ID exists.
