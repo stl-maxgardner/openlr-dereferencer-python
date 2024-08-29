@@ -1,5 +1,5 @@
-"""The example map format described in `map_format.md`, conforming to
-the interface in openlr_dereferencer.maps"""
+"""A map reader for postgresql, conforming to
+the interface defined in openlr_dereferencer.maps.abstract"""
 
 from typing import Iterable, Optional
 from openlr import Coordinates
@@ -9,42 +9,31 @@ from openlr_dereferencer.maps import MapReader
 
 class PostgresMapReader(MapReader):
     """
-    This is a reader for the example map format described in `map_format.md`.
-
-    Create an instance with: `ExampleMapReader('example.sqlite')`.
+    This is a reader for the basemap table stored in postgres as two tables of lines and nodes`.
     """
 
     def __init__(
         self,
-        ext_connect_db_method,
-        db_nickname,
         db_schema,
         lines_tbl_name,
         nodes_tbl_name,
-        conn=None,
+        conn,
         srid=4326,
     ):
-        self.connect_db = ext_connect_db_method
-        self.db_nickname = db_nickname
         self.db_schema = db_schema
         self.lines_tbl_name = lines_tbl_name
         self.nodes_tbl_name = nodes_tbl_name
         self.connection = conn
-        self.cursor = self.connection.cursor() if self.connection else None
         self.srid = srid
 
     def __enter__(self):
-        if not self.connection:
-            self.connection = self.connect_db(
-                nickname=self.db_nickname, driver="psycopg2"
-            )
-        self.cursor = self.connection.cursor()
+        self.cursor = self.connection.cursor() if self.connection else None
         return self
 
     def __exit__(self, *exc_info):
-        # make sure the dbconnection gets closed
+        # make sure the cursor gets closed
         try:
-            close_it = self.connection.close
+            close_it = self.cursor.close
         except AttributeError:
             pass
         else:
