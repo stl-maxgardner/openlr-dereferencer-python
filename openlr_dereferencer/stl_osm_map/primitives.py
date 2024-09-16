@@ -108,7 +108,7 @@ class Line(AbstractLine):
     def geometry(self) -> LineString:
         "Returns the line geometry"
         # chg list comp to single call
-        if not self._geometry:
+        if self._geometry is None:
             self.get_and_store_database_info()
         return self._geometry
 
