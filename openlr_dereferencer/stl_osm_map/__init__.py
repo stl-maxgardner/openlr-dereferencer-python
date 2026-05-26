@@ -1,9 +1,10 @@
 """A map reader for postgresql, conforming to
 the interface defined in openlr_dereferencer.maps.abstract"""
+import functools
 
 from typing import Iterable, Optional
 from openlr import Coordinates
-from .primitives import Line, Node, ExampleMapError
+from .primitives import Line, Node, ExampleMapError, DEFAULT_LRU_CACHE_SIZE
 from openlr_dereferencer.maps import MapReader
 
 
@@ -109,6 +110,7 @@ class PostgresMapReader(MapReader):
         for (node_id,) in self.cursor.fetchall():
             yield Node(self, node_id)
 
+    @functools.lru_cache(maxsize=DEFAULT_LRU_CACHE_SIZE)
     def find_lines_close_to(
         self,
         coord: Coordinates,
@@ -130,5 +132,6 @@ class PostgresMapReader(MapReader):
             ;
         """
         self.cursor.execute(stmt, (lon, lat, dist))
-        for (line_id,) in self.cursor.fetchall():
-            yield Line(self, line_id)
+        lines = [Line(self, line_id) for (line_id, ) in self.cursor.fetchall()]
+
+        return lines
